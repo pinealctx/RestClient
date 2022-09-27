@@ -1,5 +1,5 @@
 {
-  "name": "com.pinenlctx.restclient",
+  "name": "com.pinealctx.restclient",
   "displayName": "Rest Client",
   "description": "Unity3D http rest client",
   "version": "1.0.0",
@@ -7,15 +7,14 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/silkagenet/RestClient.git"
+    "url": "git+https://github.com/pinealctx/RestClient.git"
   },
   "author": {
-    "name": "Pinenlctx",
+    "name": "pinealctx",
     "email": "cdniwan@outlook.com",
-    "url": "https://github.com/pinenlctx"
+    "url": "https://github.com/pinealctx"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "keywords": [
     "Unity3D",
     "http",
@@ -23,7 +22,7 @@
     "restful"
   ],
   "bugs": {
-    "url": "https://github.com/silkagenet/RestClient/issues"
+    "url": "https://github.com/pinealctx/RestClient/issues"
   },
-  "homepage": "https://github.com/silkagenet/RestClient#readme"
+  "homepage": "https://github.com/pinealctx/RestClient#readme"
 }
