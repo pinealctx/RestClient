@@ -1,5 +1,5 @@
 {
-  "name": "net.silkage.restclient",
+  "name": "com.pinenlctx.restclient",
   "displayName": "Rest Client",
   "description": "Unity3D http rest client",
   "version": "1.0.0",
