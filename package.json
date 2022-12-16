@@ -3,8 +3,8 @@
   "dependencies": {
     "com.cysharp.unitask": "2.3.3"
   },
-  "displayName": "Unity HTTP Rest Client",
-  "version": "1.0.0",
+  "displayName": "RestClient",
+  "version": "1.0.1",
   "unity": "2021.3",
   "description": "Send HTTP requests in unity through Restful",
   "keywords": [
