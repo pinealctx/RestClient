@@ -1,0 +1,26 @@
+{
+  "name": "com.pinealctx.restclient",
+  "dependencies": {
+    "com.cysharp.unitask": "2.3.3"
+  },
+  "displayName": "Unity HTTP Rest Client",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "Send HTTP requests in unity through Restful",
+  "keywords": [
+    "Unity",
+    "HTTP",
+    "Restful"
+  ],
+  "homepage": "https://github.com/pinealctx/RestClient",
+  "documentationUrl": "https://github.com/pinealctx/RestClient",
+  "bugs": {
+    "url": "https://github.com/pinealctx/RestClient/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/pinealctx/RestClient.git"
+  },
+  "license": "MIT",
+  "author": "PinealCtx"
+}
