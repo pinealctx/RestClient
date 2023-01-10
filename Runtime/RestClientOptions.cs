@@ -40,12 +40,26 @@ namespace PinealCtx.RestClient
         public List<Action<RestRequest>> BeforeHooks { get; set; } = new();
 
         /// <summary>
+        /// 请求执行后的Hooks
+        /// </summary>
+        public List<Action<RestResponse>> AfterHooks { get; set; } = new();
+
+        /// <summary>
         /// 添加执行前Hook
         /// </summary>
         /// <param name="hook"></param>
         public void AddBeforeHook(Action<RestRequest> hook)
         {
             BeforeHooks.Add(hook);
+        }
+
+        /// <summary>
+        /// 添加执行后Hook
+        /// </summary>
+        /// <param name="hook"></param>
+        public void AddAfterHook(Action<RestResponse> hook)
+        {
+            AfterHooks.Add(hook);
         }
     }
 }

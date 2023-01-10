@@ -33,13 +33,17 @@ namespace PinealCtx.RestClient
 
         public IEnumerator Do(RestRequest request, Action<RestResponse> completedAction)
         {
+            Options.BeforeHooks?.ForEach(hook => hook(request));
             using var webRequest = BuildUnityWebRequest(request);
             yield return webRequest.SendWebRequest();
-            completedAction?.Invoke(new RestResponse(webRequest, request));
+            var response = new RestResponse(webRequest, request);
+            Options.AfterHooks?.ForEach(hook => hook(response));
+            completedAction?.Invoke(response);
         }
 
         public async Task<RestResponse> Do(RestRequest request)
         {
+            Options.BeforeHooks?.ForEach(hook => hook(request));
             var webRequest = BuildUnityWebRequest(request);
             try
             {
@@ -49,13 +53,13 @@ namespace PinealCtx.RestClient
             {
                 Debug.LogError($"do request exception: {e.Message}");
             }
-
-            return new RestResponse(webRequest, request);
+            var response = new RestResponse(webRequest, request);
+            Options.AfterHooks?.ForEach(hook => hook(response));
+            return response;
         }
 
         private UnityWebRequest BuildUnityWebRequest(RestRequest request)
         {
-            Options.BeforeHooks?.ForEach(hook => hook(request));
             var url = request.BuildUrl(Options.BaseUrl);
             var webRequest = new UnityWebRequest(url, request.Method.String());
             webRequest.downloadHandler = request.DownloadHandler;
