@@ -5,7 +5,9 @@ using System.Text;
 using Newtonsoft.Json;
 using PinealCtx.RestClient.Attribute;
 using PinealCtx.RestClient.Param;
+using UnityEngine;
 using UnityEngine.Networking;
+using RestHeaderProperty = PinealCtx.RestClient.Attribute.RestHeaderProperty;
 
 namespace PinealCtx.RestClient
 {
@@ -29,7 +31,7 @@ namespace PinealCtx.RestClient
 
         public List<HeaderParam> Headers { get; set; } = new();
 
-        public List<FormParam> Forms { get; set; } = new();
+        public WWWForm Forms { get; set; }
 
         public BodyParam Body { get; set; }
 
@@ -51,7 +53,15 @@ namespace PinealCtx.RestClient
                     Body = bodyParam;
                     break;
                 case FormParam formParam:
-                    Forms.Add(formParam);
+                    if (formParam.Data == null)
+                    {
+                        Forms.AddField(formParam.FieldName, formParam.Value, formParam.Encoding);
+                    }
+                    else
+                    {
+                        Forms.AddBinaryData(formParam.FieldName, formParam.Data, formParam.MimeType);
+                    }
+
                     break;
             }
 
@@ -77,24 +87,6 @@ namespace PinealCtx.RestClient
         public RestRequest WithHeader(string name, string value)
         {
             Headers.Add(new HeaderParam(name, value));
-            return this;
-        }
-
-        public RestRequest WithForm(string name, string value)
-        {
-            Forms.Add(new FormParam(name, value));
-            return this;
-        }
-
-        public RestRequest WithForm(string name, FormFile file)
-        {
-            Forms.Add(new FormParam(name, file));
-            return this;
-        }
-
-        public RestRequest WithForm(string name, byte[] value)
-        {
-            Forms.Add(new FormParam(name, value));
             return this;
         }
 
@@ -137,15 +129,16 @@ namespace PinealCtx.RestClient
                         case RestFormProperty formProperty:
                         {
                             hasForm = true;
+                            Forms ??= new WWWForm();
                             var value = prop.GetValue(obj);
-                            if (value.GetType() == typeof(FormFile))
+                            if (value == null) continue;
+                            if (value.GetType() != typeof(FormFile))
                             {
-                                WithForm(formProperty.Name, value as FormFile);
+                                Forms.AddField(formProperty.Name, Object2String(value));
+                                continue;
                             }
-                            else
-                            {
-                                WithForm(formProperty.Name, Object2String(value));
-                            }
+
+                            if (value is FormFile formFile) Forms.AddBinaryData(formProperty.Name, formFile.Data);
 
                             break;
                         }
@@ -219,13 +212,10 @@ namespace PinealCtx.RestClient
             if (Method == Method.Get) return null;
             if (Body == null)
             {
-                if (Forms.Count == 0) return null;
-                var sections = Forms.Select(f => f.Section).ToList();
-                var boundary = UnityWebRequest.GenerateBoundary();
-                var data = UnityWebRequest.SerializeFormSections(sections, boundary);
-                if (data == null) return null;
-                var contentType =
-                    $"multipart/form-data; boundary={Encoding.UTF8.GetString(boundary, 0, boundary.Length)}";
+                if (Forms == null) return null;
+                var data = Forms.data;
+                if (data.Length == 0) return null;
+                Forms.headers.TryGetValue("Content-Type", out var contentType);
                 Body = new BodyParam(contentType, data);
             }
 
@@ -239,7 +229,7 @@ namespace PinealCtx.RestClient
             Queries?.Clear();
             Queries = null;
             Headers?.Clear();
-            Forms?.Clear();
+            Forms = null;
             Headers = null;
             Body = null;
         }
